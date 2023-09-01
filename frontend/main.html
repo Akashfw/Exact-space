@@ -124,7 +124,7 @@
     submitBtn.addEventListener('click', async () => {
       const inputData = jsonInput.value;
       try {
-        const response = await fetch('http://localhost:3000/process-json', {
+        const response = await fetch('https://exact-space-mazb.onrender.com/process-json', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
