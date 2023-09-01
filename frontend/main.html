@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JSON Input and Output</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      /* display: flex; */
+      height: 100vh;
+      align-items: stretch;
+    }
+    
+    .container {
+      display: flex;
+      flex-direction: row;
+      flex: 1;
+    }
+    
+    .form-container {
+      flex: 1;
+      padding: 20px;
+      border-right: 1px solid #ccc;
+      overflow-y: auto;
+    }
+    
+    .output-container {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    
+    textarea {
+      width: 100%;
+      height: 400px;
+      overflow-y: auto;
+      border: 1px solid #ccc;
+      padding: 10px;
+      font-size: 14px;
+    }
+    
+    button {
+      display: block;
+      margin-top: 10px;
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+  
+    /* styles.css */
+  header {
+      background-color: #007bff;
+      color: white;
+      padding: 10px 0;
+  }
+  
+  nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+  }
+  
+  h1 {
+      font-size: 24px;
+  }
+  
+  ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+  }
+  
+  li {
+      margin-right: 20px;
+  }
+  
+  a {
+      text-decoration: none;
+      color: white;
+      font-weight: bold;
+      font-size: 16px;
+  }
+  input{
+      margin: 10px;
+  }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <h1>Exact-Space</h1>
+      <ul>
+        <li><a href="index.html">Problem-1</a></li>
+        <li><a href="main.html">Problem-3</a></li>
+      </ul>
+    </nav>
+  </header>
+  <div class="container">
+    <div class="form-container">
+      <h2>Input JSON Data</h2>
+      <textarea id="jsonInput" placeholder="Enter JSON data here..." required></textarea>
+      <button id="submitBtn">Submit</button>
+    </div>
+    <div class="output-container">
+      <h2>Output JSON Data in Form</h2>
+      <div id="output"></div> <!-- Updated to a <div> element -->
+    </div>
+  </div>
+  
+  <script>
+    const submitBtn = document.getElementById('submitBtn');
+    const jsonInput = document.getElementById('jsonInput');
+    const output = document.getElementById('output');
+    
+    submitBtn.addEventListener('click', async () => {
+      const inputData = jsonInput.value;
+      try {
+        const response = await fetch('http://localhost:3000/process-json', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: inputData
+        });
+        if (response.ok) {
+          const responseData = await response.json(); // Parse JSON response
+
+          // Clear previous content
+          output.innerHTML = '';
+
+          // Iterate over keys and values in the JSON response
+          for (const [key, value] of Object.entries(responseData)) {
+            // Create an input element with the key as the title and the value as the placeholder
+            const inputElement = document.createElement('input');
+            inputElement.setAttribute('type', 'text');
+            inputElement.setAttribute('placeholder', value);
+            inputElement.setAttribute('title', key);
+
+            const sp= document.createElement("span");
+            sp.innerText=key;
+
+            let br= document.createElement("br");
+            
+            // Append the input element to the output container
+            output.append(sp,inputElement,br);
+          }
+        } else {
+          output.textContent = 'Error: ' + response.status + "  " + response.statusText;
+        }
+      } catch (error) {
+        output.textContent = 'Error: ' + error.message;
+      }
+    });
+  </script>
+</body>
+</html>
