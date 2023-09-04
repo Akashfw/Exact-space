@@ -7,11 +7,11 @@ require("dotenv").config();
 const app = express();
 
 // Middleware to parse JSON in request body
-app.use(cors());
+
 app.use(bodyParser.json());
 app.use(express.json());
 
-
+app.use(cors());
 app.get("/",(req,res)=>{
     res.send("home page")
 })
